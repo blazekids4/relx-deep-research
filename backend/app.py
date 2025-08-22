@@ -4,61 +4,19 @@ from azure.ai.projects import AIProjectClient
 from azure.identity import DefaultAzureCredential
 from azure.ai.agents import AgentsClient
 from azure.ai.agents.models import DeepResearchTool, MessageRole, ThreadMessage
-from azure.ai.agents.telemetry import AIAgentsInstrumentor
-from azure.monitor.opentelemetry import configure_azure_monitor
-from opentelemetry import trace
-from opentelemetry.instrumentation.openai_v2 import OpenAIInstrumentor
 from dotenv import load_dotenv
 from datetime import datetime
-import warnings
+from opentelemetry import trace
 
-# Suppress deprecation warnings
-warnings.filterwarnings("ignore", message="LogRecord init with.*is deprecated", category=UserWarning)
+# Import telemetry module
+from telemetry import tracer, configure_tracing
 
 # Load environment variables from .env file
 load_dotenv()
 
-# Enable content recording for tracing (contains chat messages)
-os.environ["AZURE_TRACING_GEN_AI_CONTENT_RECORDING_ENABLED"] = "true"
-
-# Get the tracer before configuration
-tracer = trace.get_tracer(__name__)
-
-
-def configure_tracing(project_client: AIProjectClient):
-    """Configure Azure Monitor and instrumentation using project client."""
-    try:
-        # Get connection string from the project's Application Insights
-        connection_string = project_client.telemetry.get_application_insights_connection_string()
-        
-        # Configure Azure Monitor with the connection string
-        configure_azure_monitor(
-            connection_string=connection_string,
-            disable_logging=True  # This will suppress the deprecated logging warnings
-        )
-        
-        print("Azure Monitor configured successfully")
-        
-    except Exception as e:
-        print(f"Warning: Could not get Application Insights connection string from project: {e}")
-        # Fall back to environment variable
-        connection_string = os.getenv("APPLICATIONINSIGHTS_CONNECTION_STRING")
-        if connection_string:
-            configure_azure_monitor(
-                connection_string=connection_string,
-                disable_logging=True
-            )
-            print("Azure Monitor configured using environment variable")
-        else:
-            print("Warning: No Application Insights connection string available. Tracing disabled.")
-    
-    # Instrument OpenAI and AI Agents after Azure Monitor is configured
-    OpenAIInstrumentor().instrument()
-    AIAgentsInstrumentor().instrument()
-    print("OpenAI and AI Agents instrumentation enabled")
-
 
 @tracer.start_as_current_span("fetch_agent_response")
+
 def fetch_and_print_new_agent_response(
     thread_id: str,
     agents_client: AgentsClient,
@@ -101,6 +59,7 @@ def fetch_and_print_new_agent_response(
 
 
 @tracer.start_as_current_span("create_research_summary")
+
 def create_research_summary(
         message: ThreadMessage,
         user_query: str = "",
@@ -162,6 +121,7 @@ def create_research_summary(
 
 
 @tracer.start_as_current_span("process_user_message")
+
 def process_user_message(
     user_input: str,
     thread_id: str,
@@ -260,6 +220,7 @@ def process_user_message(
 
 
 @tracer.start_as_current_span("deep_research_session")
+
 def main():
     """Main conversation loop with comprehensive tracing."""
     span = trace.get_current_span()
@@ -277,7 +238,7 @@ def main():
         # Configure tracing with the project client
         configure_tracing(project_client)
 
-        conn_id = project_client.connections.get(name=os.environ["BING_RESOURCE_NAME"]).id
+        conn_id = project_client.connections.get(name=os.environ["BING_CONNECTED_RESOURCE_NAME"]).id
         span.set_attribute("bing.connection_id", conn_id)
 
         # Initialize a Deep Research tool with Bing Connection ID and Deep Research model deployment name
