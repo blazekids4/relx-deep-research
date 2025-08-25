@@ -250,7 +250,7 @@ def main():
     try:
         # Initialize Azure clients
         project_client = AIProjectClient(
-            endpoint=os.environ["PROJECT_ENDPOINT"],
+            endpoint=os.environ["PROJECT_ENDPOINT_RELX_LEGAL"],
             credential=DefaultAzureCredential(),
         )
         
