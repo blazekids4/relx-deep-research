@@ -7,16 +7,3 @@ opentelemetry-instrumentation-openai
 opentelemetry-instrumentation-openai-v2
 azure-ai-evaluation
 opentelemetry-sdk
-azure-storage-blob
-openai
-numpy
-bs4
-azure-core
-python-dotenv
-requests
-fastapi
-uvicorn
-semantic-kernel
-pydantic
-typing-extensions
-gunicorn

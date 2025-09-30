@@ -8,7 +8,7 @@ This toolkit is designed to help researchers, analysts, and knowledge workers ef
 
 ## Key Components
 
-The repository contains two main components:
+The repository contains three main components:
 
 ### 1. Batch Research Agent
 
@@ -31,6 +31,15 @@ Located in the `chat_research_agent` directory, this component provides an inter
 - Interactive learning and discovery
 
 [Learn more about Chat Research](chat_research_agent/README.md)
+
+### 3. Multi-Agent Bing Integration
+
+Located in the `multi-agent-bing` directory, this component demonstrates how multiple specialized agents can work together with Bing search integration. It's particularly useful for:
+
+- Coordinated multi-agent research workflows
+- Product analysis and attribute extraction
+- Search-enhanced knowledge retrieval
+- Pipeline-based processing of complex research tasks
 
 ## Features Common to Both Components
 
@@ -122,6 +131,12 @@ relx-deep-research/
 │   │   ├── chat_research_with_tracing.py
 │   │   └── telemetry.py            # Telemetry implementation
 │   └── __pycache__/                # Python cache files
+│
+├── multi-agent-bing/               # Multi-agent with Bing integration
+│   ├── agent_product_attributes_analyst.py  # Product analysis agent
+│   ├── agents_multi_w_bing.py      # Multi-agent coordination
+│   ├── README.md                   # Multi-agent documentation
+│   └── run_product_analysis_pipeline.py     # Pipeline execution script
 │
 ├── data/                           # Sample data files
 │   ├── Sample Questions - Deep Research.csv
