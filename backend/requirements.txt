@@ -1,9 +1,0 @@
-azure-ai-projects
-python-dotenv
-azure-identity
-azure-ai-agents
-azure-monitor-opentelemetry
-opentelemetry-instrumentation-openai
-opentelemetry-instrumentation-openai-v2
-azure-ai-evaluation
-opentelemetry-sdk
